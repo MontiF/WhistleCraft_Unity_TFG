@@ -7,16 +7,24 @@ public class PlayerMovement1 : MonoBehaviour
     public float Speed = 1.0f;
     public float CameraSpeed = 1.0f;
     private float xRotation = 0f;
-    public float JumpForce = 1.0f;
-    private Rigidbody Physics;
-
     public Transform cameraTransform;
-    
+
+    public float JumpForce = 1.0f;
+
+    private bool tocandoSuelo;
+    public Transform groundCheck; 
+    public float groundDistance = 0.1f; 
+    public LayerMask groundMask;
+
+    private Rigidbody fisicas;
+
     // Se llama al principio de la ejecuion del objeto
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        fisicas = GetComponent<Rigidbody>();
     }
 
     // Se llama con cada Frame
@@ -42,8 +50,10 @@ public class PlayerMovement1 : MonoBehaviour
         }
         
         //Salto
-        if(Input.GetKeyDown(KeyCode.Space)){
-            Physics.AddForce(new Vector3(0,JumpForce,0), ForceMode.Impulse);
+        tocandoSuelo = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if(Input.GetKeyDown(KeyCode.Space) && tocandoSuelo){
+            fisicas.AddForce(new Vector3(0,JumpForce,0), ForceMode.Impulse);
         }
     }
 }
