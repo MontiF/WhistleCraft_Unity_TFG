@@ -18,7 +18,7 @@ public class PlayerMovement1 : MonoBehaviour
 
     private Rigidbody fisicas;
 
-    public float sprint = 1.0f;
+    public float correr = 1.0f;
 
     // Se llama al principio de la ejecuion del objeto
     void Start()
@@ -44,10 +44,9 @@ public class PlayerMovement1 : MonoBehaviour
 
         transform.Rotate(new Vector3(0, rotationY * Time.deltaTime * velocidadCamara, 0));
         xRotation -= rotationX;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); //impide dar la vuelat entera        
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); //impide dar la vuelta entera        
 
-        if (cameraTransform != null)
-        {
+        if (cameraTransform != null){
             cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         }
         
@@ -58,8 +57,9 @@ public class PlayerMovement1 : MonoBehaviour
             fisicas.AddForce(new Vector3(0,fuerzaSalto,0), ForceMode.Impulse);
         }
 
+        //Correr
         if(Input.GetKey(KeyCode.LeftShift)){
-        transform.Translate(new Vector3(horizontal, 0.0f, vertical) * Time.deltaTime * velocidad * sprint);      
+        transform.Translate(new Vector3(horizontal, 0.0f, vertical) * Time.deltaTime * velocidad * correr);      
     }
     }
 }
