@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: 8c9c67fe0e1a7fc45930ec88012a927e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cameraTransform: {instanceID: 0}
+  - groundCheck: {instanceID: 0}
+  - cabezaSteve: {fileID: 2631812337900406116, guid: 23b1710c02d93904fbccafbbb71301f2, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

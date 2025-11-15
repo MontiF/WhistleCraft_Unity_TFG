@@ -20,6 +20,8 @@ public class PlayerMovement1 : MonoBehaviour
 
     public float correr = 1.0f;
 
+    public Transform cabezaSteve;
+
     // Se llama al principio de la ejecuion del objeto
     void Start()
     {
@@ -49,7 +51,12 @@ public class PlayerMovement1 : MonoBehaviour
         if (cameraTransform != null){
             cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         }
-        
+
+        if (cabezaSteve != null){
+            // Solo aplicamos la rotación vertical (xRotation)
+            cabezaSteve.localRotation = Quaternion.Euler(0f, 0f, xRotation);
+        }
+
         //Salto
         tocandoSuelo = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
