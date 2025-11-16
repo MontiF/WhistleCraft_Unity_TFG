@@ -719,6 +719,34 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
       propertyPath: m_Name
       value: steve rig
@@ -1300,7 +1328,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100103141}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 1.5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1332,17 +1360,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement1
   velocidad: 7
-  velocidadCamara: 400
-  cameraTransform: {fileID: 1312313099}
+  correr: 5
   fuerzaSalto: 7
   groundCheck: {fileID: 1417558575}
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  correr: 5
+  velocidadCamara: 400
+  cameraTransform: {fileID: 1312313099}
   cabezaSteve: {fileID: 1398100504}
-  primeraEjecucion: 1
 --- !u!136 &2100103144
 CapsuleCollider:
   m_ObjectHideFlags: 0
