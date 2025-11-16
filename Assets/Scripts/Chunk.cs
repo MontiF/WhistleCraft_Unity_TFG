@@ -3,6 +3,10 @@ using System.Collections.Generic; // Esta librería nos ofrece recursos como las
 using System.Collections;
 public class Chunk : MonoBehaviour
 {
+    public static readonly int Anchura = 16;
+    public static readonly int Altura = 128; // Reducido para pruebas
+    public static readonly int Profundidad = 16;
+    public TipoBloque[,,] bloques = new TipoBloque[Anchura, Altura, Profundidad];
 
     //Creamos un filtrado de malla que nos ayudará a ver la malla por el lado que nos interesa
     public MeshFilter filtradorMalla;
@@ -21,7 +25,9 @@ public class Chunk : MonoBehaviour
     //Creamos las mallas a partir de los métodos de la clase GeneradorMalla con el chunk correspondiente (this) y sus coordenadas (Vector3.zero)
     private void Start()
     {
-        GeneradorMalla.GenerarCaraFrontal(this, Vector3.zero);
+        GenerarDatosVoxel(); 
+        GenerarMallaOptimizada();
+        /*GeneradorMalla.GenerarCaraFrontal(this, Vector3.zero);
         GeneradorMalla.GenerarCaraTrasera(this, Vector3.zero);
 
         GeneradorMalla.GenerarCaraDerecha(this, Vector3.zero);
@@ -29,7 +35,75 @@ public class Chunk : MonoBehaviour
 
         GeneradorMalla.GenerarCaraAbajo(this, Vector3.zero);
         GeneradorMalla.GenerarCaraArriba(this, Vector3.zero);
-
+        */
         GeneradorMalla.AplicarMallas(this);
+    }
+    void GenerarDatosVoxel(){
+        for (int x = 0; x < Anchura; x++){
+            for (int z = 0; z < Profundidad; z++){
+                // Dejamos 32 bloques de aire por encima
+                for (int y = 0; y < Altura; y++){
+                    if (y < 32){
+                        bloques[x, y, z] = TipoBloque.TIERRA;
+                    }else{
+                        bloques[x, y, z] = TipoBloque.AIRE;
+                    }
+                }
+            }
+        }
+    }
+    void GenerarMallaOptimizada(){
+        vertices.Clear();
+        triangulos.Clear();
+
+        for (int x = 0; x < Anchura; x++){
+            for (int y = 0; y < Altura; y++){
+                for (int z = 0; z < Profundidad; z++){
+                    if (bloques[x, y, z] != TipoBloque.AIRE){
+                        // Si es un bloque sólido, chequeamos sus 6 caras
+                        GenerarCarasBloque(x, y, z);
+                    }
+                }
+            }
+        }
+    }
+    void GenerarCarasBloque(int x, int y, int z){
+        Vector3 posicion = new Vector3(x, y, z);
+
+        // Chequeo de las 6 caras (Hidden Face Culling)
+        
+        // Cara Superior (+Y)
+        if (GetTipoBloque(x, y + 1, z) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraArriba(this, posicion);
+        }
+        // Cara Inferior (-Y)
+        if (GetTipoBloque(x, y - 1, z) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraAbajo(this, posicion);
+        }
+        // Cara Frontal (+Z)
+        if (GetTipoBloque(x, y, z + 1) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraFrontal(this, posicion);
+        }
+        // Cara Trasera (-Z)
+        if (GetTipoBloque(x, y, z - 1) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraTrasera(this, posicion);
+        }
+        // Cara Derecha (+X)
+        if (GetTipoBloque(x + 1, y, z) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraDerecha(this, posicion);
+        }
+        // Cara Izquierda (-X)
+        if (GetTipoBloque(x - 1, y, z) == TipoBloque.AIRE){
+            GeneradorMalla.GenerarCaraIzquierda(this, posicion);
+        }
+    }
+    public TipoBloque GetTipoBloque(int x, int y, int z) {
+        if (x < 0 || x >= Anchura || y < 0 || y >= Altura || z < 0 || z >= Profundidad){
+            // Si accedemos fuera del chunk (por ejemplo, para chequear un vecino del borde), 
+            // asumimos que es aire o un bloque sólido (depende de cómo manejes los chunks vecinos).
+            // Para el chunk inicial, asumir que todo fuera es Aire es más fácil.
+            return TipoBloque.AIRE;
+        }
+        return bloques[x, y, z];
     }
 }
