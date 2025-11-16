@@ -129,6 +129,6 @@ public static class GeneradorMalla
 
         chunk.colisionadorMalla.sharedMesh = malla;
 
-
+        
     }
 }
