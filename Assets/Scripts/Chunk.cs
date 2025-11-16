@@ -6,7 +6,7 @@ public class Chunk : MonoBehaviour
 
     //Creamos un filtrado de malla que nos ayudará a ver la malla por el lado que nos interesa
     public MeshFilter filtradorMalla;
-
+    public MeshCollider colisionadorMalla;
     //Creamos dos listas de tipo Vector3 para los vectores en R3 y otra para los triángulos que formarán las caras del cuadrado
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> triangulos = new List<int>();
@@ -15,6 +15,7 @@ public class Chunk : MonoBehaviour
     private void Awake()
     {
         filtradorMalla = GetComponent<MeshFilter>();
+        colisionadorMalla = GetComponent<MeshCollider>();
     }
 
     //Creamos las mallas a partir de los métodos de la clase GeneradorMalla con el chunk correspondiente (this) y sus coordenadas (Vector3.zero)

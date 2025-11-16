@@ -8,15 +8,15 @@ public static class GeneradorMalla
     {
         int ultimoVertice = chunk.vertices.Count;
 
-        chunk.vertices.Add(posicion + new Vector3(0, 0, 1));
+        chunk.vertices.Add(posicion + new Vector3(0, 0, 1)); // z = 1
         chunk.vertices.Add(posicion + new Vector3(0, 1, 1));
         chunk.vertices.Add(posicion + new Vector3(1, 1, 1));
         chunk.vertices.Add(posicion + new Vector3(1, 0, 1));
 
-
         chunk.triangulos.Add(ultimoVertice + 2);
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice);
+
         chunk.triangulos.Add(ultimoVertice);
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice + 2);
@@ -31,7 +31,6 @@ public static class GeneradorMalla
         chunk.vertices.Add(posicion + new Vector3(1, 1, 0));
         chunk.vertices.Add(posicion + new Vector3(1, 0, 0));
 
-
         chunk.triangulos.Add(ultimoVertice);
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
@@ -39,7 +38,6 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 2);
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice);
-
     }
 
     public static void GenerarCaraIzquierda(Chunk chunk, Vector3 posicion)
@@ -123,10 +121,14 @@ public static class GeneradorMalla
         malla.vertices = chunk.vertices.ToArray();
         malla.triangles = chunk.triangulos.ToArray();
 
-        // 3. ¡Importante! Recalcular las normales para que la luz funcione
+        // 3.Recalcular las normales para que la luz funcione
         malla.RecalculateNormals();
 
         // 4. Asignar la malla completa al MeshFilter
         chunk.filtradorMalla.mesh = malla;
+
+        chunk.colisionadorMalla.sharedMesh = malla;
+
+
     }
 }
