@@ -4,16 +4,20 @@ public class InteraccionBloque : MonoBehaviour
 {
     public float distanciaInteraccion = 5f;
     public Camera PrimeraPersona;
-    public Color colorResaltado = Color.grey;
+    public GameObject bloqueResaltado;
+    public Color colorResaltado = Color.red;
 
-    private Transform bloqueResaltado;
-    private Color colorOriginal;
-    private Renderer rendererBloqueResaltado;
+    private Renderer rendererResaltado;
 
     void Start()
     {
         if (PrimeraPersona == null){
             PrimeraPersona = Camera.main;
+        }
+        if (bloqueResaltado != null)
+        {
+            rendererResaltado = bloqueResaltado.GetComponent<Renderer>();
+            rendererResaltado.material.color = colorResaltado; // Aplicamos el color al iniciar
         }
     }
 
@@ -37,31 +41,28 @@ public class InteraccionBloque : MonoBehaviour
 
     void ManejarResaltado()
     {
+        if (bloqueResaltado == null) return;
+
         Ray rayo = new Ray(PrimeraPersona.transform.position, PrimeraPersona.transform.forward);
-
-        // Si ya habia un bloque resaltado, le devolvemos su color original antes de hacer nada.
-        if (bloqueResaltado != null)
-        {
-            rendererBloqueResaltado.material.color = colorOriginal;
-            bloqueResaltado = null;
-            rendererBloqueResaltado = null;
-        }
-
+        
         // Lanzamos un rayo para ver si estamos mirando un bloque.
         if (Physics.Raycast(rayo, out RaycastHit hit, distanciaInteraccion))
         {
-            Transform seleccion = hit.transform;
-            Renderer rendererSeleccion = seleccion.GetComponent<Renderer>();
-
-            // Si el objeto tiene un componente Renderer, lo resaltamos.
-            if (rendererSeleccion != null)
+            // Nos aseguramos de que hemos golpeado un chunk
+            if (hit.transform.GetComponent<Chunk>() != null)
             {
-                bloqueResaltado = seleccion;
-                rendererBloqueResaltado = rendererSeleccion;
-                colorOriginal = rendererSeleccion.material.color; // Guardamos el color original
-                rendererSeleccion.material.color = colorResaltado; // Aplicamos el color de resaltado
+                // Calculamos la posicion del bloque
+                Vector3 posicionBloque = hit.point - hit.normal * 0.01f; // Nos movemos un poco hacia adentro para evitar errores de precisión
+                Vector3 posicionResaltado = new Vector3(Mathf.FloorToInt(posicionBloque.x), Mathf.FloorToInt(posicionBloque.y), Mathf.FloorToInt(posicionBloque.z));
+                
+                // Movemos el objeto de resaltado a la posicion del bloque y lo activamos
+                bloqueResaltado.transform.position = posicionResaltado + new Vector3(0.5f, 0.5f, 0.5f);
+                bloqueResaltado.SetActive(true);
+                return;
             }
         }
+        // Si el rayo no golpea nada, ocultamos el resaltado
+        bloqueResaltado.SetActive(false);
     }
 
     // Logica del Raycast
