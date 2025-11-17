@@ -94,14 +94,14 @@ public static class GeneradorMalla
         chunk.vertices.Add(posicion + new Vector3(1, 1, 1)); // V2
         chunk.vertices.Add(posicion + new Vector3(1, 1, 0)); // V3
 
-        // Triángulos: Aseguran que la normal apunte hacia ARRIBA
+        chunk.triangulos.Add(ultimoVertice + 0);
+        chunk.triangulos.Add(ultimoVertice + 2);
+        chunk.triangulos.Add(ultimoVertice + 3);
+
         chunk.triangulos.Add(ultimoVertice + 0);
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
 
-        chunk.triangulos.Add(ultimoVertice + 0);
-        chunk.triangulos.Add(ultimoVertice + 2);
-        chunk.triangulos.Add(ultimoVertice + 3);
     }
 
     // Genera la cara que mira hacia ABAJO (Y negativa)
@@ -115,14 +115,14 @@ public static class GeneradorMalla
         chunk.vertices.Add(posicion + new Vector3(1, 0, 1)); // V2
         chunk.vertices.Add(posicion + new Vector3(0, 0, 1)); // V3
 
-        // Triángulos: Aseguran que la normal apunte hacia ABAJO
         chunk.triangulos.Add(ultimoVertice + 0);
         chunk.triangulos.Add(ultimoVertice + 2);
-        chunk.triangulos.Add(ultimoVertice + 1);
+        chunk.triangulos.Add(ultimoVertice + 3);
 
         chunk.triangulos.Add(ultimoVertice + 0);
-        chunk.triangulos.Add(ultimoVertice + 3);
+        chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
+
     }
 
     public static void AplicarMallas(Chunk chunk)
