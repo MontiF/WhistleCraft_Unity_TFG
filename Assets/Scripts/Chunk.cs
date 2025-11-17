@@ -106,4 +106,29 @@ public class Chunk : MonoBehaviour
         }
         return bloques[x, y, z];
     }
+
+    public void ModificarBloque(int x, int y, int z, TipoBloque tipo)
+    {
+        // Convertimos las coordenadas del mundo a coordenadas locales del chunk
+        int localX = x - Mathf.FloorToInt(transform.position.x);
+        int localY = y - Mathf.FloorToInt(transform.position.y);
+        int localZ = z - Mathf.FloorToInt(transform.position.z);
+
+        // Comprobamos si la posición está dentro de los límites de este chunk
+        if (localX < 0 || localX >= Anchura ||
+            localY < 0 || localY >= Altura ||
+            localZ < 0 || localZ >= Profundidad)
+        {
+            // El bloque no pertenece a este chunk, no hacemos nada.
+            // (En un futuro, aquí podrías buscar el chunk correcto)
+            return;
+        }
+
+        // Actualizamos el tipo de bloque en nuestra matriz de datos
+        bloques[localX, localY, localZ] = tipo;
+
+        // Regeneramos la malla para que el cambio sea visible
+        GenerarMallaOptimizada();
+        GeneradorMalla.AplicarMallas(this);
+    }
 }

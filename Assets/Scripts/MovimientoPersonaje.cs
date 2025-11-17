@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Asegurarse de que el Rigidbody siempre exista
+// Se asegura que el Rigidbody siempre exista el personaje
 [RequireComponent(typeof(Rigidbody))]
 public class MovimientoPersonaje : MonoBehaviour
 {
     [Header("Movimiento")]
     public float velocidad = 7.0f;
-    public float correr = 1.5f; // Esto ahora es un multiplicador (correr = 1.5x de velocidad)
+    public float correr = 1.5f; //multiplicador de velocidad para correr
+    public float andar = 1.0f; //multiplicador de velocidad para andar
+    float multiplicadorVelocidad = 1.0f;
     
     [Header("Salto")]
     public float fuerzaSalto = 10.0f;
@@ -17,18 +19,24 @@ public class MovimientoPersonaje : MonoBehaviour
     public LayerMask groundMask;
     private bool tocandoSuelo;
     
-    [Header("Cámara")]
+    [Header("Camara")]
     public float velocidadCamara = 400.0f;
     public Transform cameraTransform;
     public Transform cabezaSteve;
     private float yRotation = 0f;
 
-    // Variables privadas
-    private Rigidbody fisicas;
-    private Vector3 moveInput; // Almacenará el input de WASD
-    private bool jumpPressed;  // Almacenará si se ha pulsado salto
+    [Header("Agacharse")]
+    public float velocidadAgachado = 0.5f;
+    public float alturaCamaraAgachado = 0.75f; // Multiplicador de altura de la camara al agacharse
+    public Transform torsoSteve;
+    private bool agachado; // Almacenara si esta agachado o no
 
-    // Awake se usa para inicializar componentes (es más seguro que Start)
+    private Rigidbody fisicas;
+    private Vector3 inputMovimiento; // Almacenara el input de WASD
+    private Vector3 posicionOriginalCamara;
+    private bool saltoPresionado;  // Almacenara si se ha pulsado salto 
+
+    // Awake se usa para inicializar componentes antes de iniciar el programa
     void Awake()
     {
         fisicas = GetComponent<Rigidbody>();
@@ -37,42 +45,48 @@ public class MovimientoPersonaje : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // NOTA: He quitado la lógica de "primeraEjecucion", 
-        // ya que al mover la física a FixedUpdate no suele ser necesaria.
-    }
-
-    // Update se llama en cada frame. Ideal para capturar inputs.
-    void Update()
-    {
-        // --- CAPTURA DE INPUT DE MOVIMIENTO ---
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        
-        // Comprobar si está corriendo
-        bool estaCorriendo = Input.GetKey(KeyCode.LeftShift);
-        float multiplicadorVelocidad = estaCorriendo ? correr : 1.0f;
-
-        // Almacenamos el input para usarlo en FixedUpdate
-        // Lo multiplicamos por la velocidad aquí
-        moveInput = new Vector3(horizontal, 0.0f, vertical) * velocidad * multiplicadorVelocidad;
-        moveInput = Vector3.ClampMagnitude(moveInput, velocidad * multiplicadorVelocidad); // Evita ir más rápido en diagonal
-
-        // --- CAPTURA DE INPUT DE SALTO ---
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (cameraTransform != null)
         {
-            jumpPressed = true;
+            posicionOriginalCamara = cameraTransform.localPosition;
         }
 
-        // --- MOVIMIENTO DE LA CÁMARA (RATÓN) ---
-        // Esto puede quedarse en Update porque no es física
+    }
+
+    // Update se llama en cada frame. Ideal para capturar inputs
+    void Update()
+    {
+        // Input de movimiento (WASD)
+        float horizontal = Input.GetAxis("Horizontal"); // d+1, a-1
+        float vertical = Input.GetAxis("Vertical"); // w+1, s-1
+        
+        // Comprobar si esta corriendo
+        if(Input.GetKey(KeyCode.LeftShift) && !agachado){
+            multiplicadorVelocidad = correr;
+        }else if(!agachado){
+            multiplicadorVelocidad = andar;
+        }else{
+            multiplicadorVelocidad = velocidadAgachado;
+        }
+
+        // Almacenamos el input para usarlo en FixedUpdate
+        // Lo multiplicamos por la velocidad aqui
+        inputMovimiento = new Vector3(horizontal, 0.0f, vertical) * velocidad * multiplicadorVelocidad;
+        inputMovimiento = Vector3.ClampMagnitude(inputMovimiento, velocidad * multiplicadorVelocidad); // Evita ir mas rapido en diagonal
+
+        // Input de Salto (espacio)
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            saltoPresionado = true;
+        }
+
+        // Movimiento Camara (Raton)
         float rotationX = Input.GetAxis("Mouse X") * Time.deltaTime * velocidadCamara;
         float rotationY = Input.GetAxis("Mouse Y") * Time.deltaTime * velocidadCamara;
 
         // Rotar el cuerpo del jugador (horizontalmente)
-        // OJO: Le pedimos al Rigidbody que rote, no al transform
         fisicas.MoveRotation(fisicas.rotation * Quaternion.Euler(new Vector3(0, rotationX, 0)));
         
-        // Rotar la cámara (verticalmente)
+        // Rotar la camara (verticalmente)
         yRotation -= rotationY;
         yRotation = Mathf.Clamp(yRotation, -90f, 90f); //impide dar la vuelta entera 
 
@@ -83,37 +97,56 @@ public class MovimientoPersonaje : MonoBehaviour
 
         if (cabezaSteve != null)
         {
-            // Solo aplicamos la rotación vertical (yRotation)
-            // (Asegúrate de que el eje 'Z' es el correcto para la cabeza de Steve)
+            // Solo aplicamos la rotacion vertical (yRotation)
             cabezaSteve.localRotation = Quaternion.Euler(0f, 0f, yRotation); 
-            // Si la cabeza rota mal, prueba: Quaternion.Euler(0f, 0f, yRotation) o Quaternion.Euler(yRotation, 0f, 0f)
         }
+
+        // Input de Agacharse (Ctrl izquierdo)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (torsoSteve != null){
+                torsoSteve.localRotation = Quaternion.Euler(0f, 90f, 125f);
+            }
+            if (cameraTransform != null)
+            {
+                cameraTransform.localPosition = new Vector3(posicionOriginalCamara.x, posicionOriginalCamara.y * alturaCamaraAgachado, posicionOriginalCamara.z);
+            }
+            agachado = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            if (torsoSteve != null){
+                torsoSteve.localRotation = Quaternion.Euler(0f, 90f, 90f);
+            }
+            if (cameraTransform != null)
+            {
+                cameraTransform.localPosition = posicionOriginalCamara;
+            }
+            agachado = false;
+        }
+
     }
 
-    // FixedUpdate se llama en un ritmo fijo. Ideal para FÍSICA.
+    // FixedUpdate se llama en un ritmo fijo. Ideal para fisicas.
     void FixedUpdate()
     {
-        // --- APLICAR MOVIMIENTO ---
-        
-        // 1. Convertir el input (que es local) a dirección del mundo
-        // Hacia donde está mirando el jugador
-        Vector3 moveDirection = transform.TransformDirection(moveInput);
+        // Convertir el input a direccion del mundo
+        // Hacia donde esta mirando el jugador
+        Vector3 direccionMovimiento = transform.TransformDirection(inputMovimiento);
 
-        // 2. Aplicar la velocidad al Rigidbody
-        // Mantenemos la velocidad vertical (gravedad/salto) que ya tuviera
-        fisicas.linearVelocity = new Vector3(moveDirection.x, fisicas.linearVelocity.y, moveDirection.z);
+        // Aplicar la velocidad al Rigidbody
+        // Mantenemos la velocidad vertical (gravedad/salto)
+        fisicas.linearVelocity  = new Vector3(direccionMovimiento.x, fisicas.linearVelocity.y, direccionMovimiento.z);
 
-        // --- APLICAR SALTO ---
-
-        // Comprobamos el suelo en FixedUpdate (es una consulta de física)
+        // Aplicar salto
         tocandoSuelo = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (jumpPressed && tocandoSuelo)
+        if (saltoPresionado && tocandoSuelo)
         {
             fisicas.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         }
         
-        // Reseteamos el flag de salto
-        jumpPressed = false;
+        // Reseteamos la flag de salto
+        saltoPresionado = false;
     }
 }

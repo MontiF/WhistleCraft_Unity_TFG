@@ -427,7 +427,7 @@ GameObject:
   - component: {fileID: 1175805963}
   - component: {fileID: 1175805962}
   - component: {fileID: 1175805965}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -905,6 +905,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2100103142}
   m_SourcePrefab: {fileID: 100100000, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+--- !u!4 &1234717116 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 795913204570974839, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+  m_PrefabInstance: {fileID: 1186229699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1312313098
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,7 +939,7 @@ Transform:
   m_GameObject: {fileID: 1312313098}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17832002, y: 6.9000006, z: 0.091070406}
+  m_LocalPosition: {x: 0.17832002, y: 6.9000006, z: -1.2}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1057,6 +1062,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteraccionBloque
   distanciaInteraccion: 5
   PrimeraPersona: {fileID: 1312313102}
+  colorResaltado: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &1338596244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1361,6 +1367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement1
   velocidad: 7
   correr: 5
+  andar: 1
   fuerzaSalto: 7
   groundCheck: {fileID: 1417558575}
   groundDistance: 0.4
@@ -1370,6 +1377,9 @@ MonoBehaviour:
   velocidadCamara: 400
   cameraTransform: {fileID: 1312313099}
   cabezaSteve: {fileID: 1398100504}
+  velocidadAgachado: 0.5
+  alturaCamaraAgachado: 0.75
+  torsoSteve: {fileID: 1234717116}
 --- !u!136 &2100103144
 CapsuleCollider:
   m_ObjectHideFlags: 0
