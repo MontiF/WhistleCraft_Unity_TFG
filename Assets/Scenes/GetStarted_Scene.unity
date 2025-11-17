@@ -1058,6 +1058,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2100103142}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2100103147}
   m_SourcePrefab: {fileID: 100100000, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
 --- !u!1 &1312313098
 GameObject:
@@ -1071,7 +1074,6 @@ GameObject:
   - component: {fileID: 1312313102}
   - component: {fileID: 1312313101}
   - component: {fileID: 1312313100}
-  - component: {fileID: 1312313103}
   m_Layer: 0
   m_Name: PrimeraPersona
   m_TagString: Untagged
@@ -1197,22 +1199,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1312313103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312313098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b3a3123cba654d4ebf5ff2d0c904575, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteraccionBloque
-  distanciaInteraccion: 5
-  PrimeraPersona: {fileID: 1312313102}
-  bloqueResaltado: {fileID: 0}
-  colorResaltado: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1338596244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,6 +1651,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e60282cbd7fa7784da901af97b2e8975, type: 3}
   m_PrefabInstance: {fileID: 1186229699}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2100103147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100103141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3a3123cba654d4ebf5ff2d0c904575, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteraccionBloque
+  distanciaInteraccion: 5
+  PrimeraPersona: {fileID: 1312313102}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
