@@ -141,7 +141,5 @@ public static class GeneradorMalla
         chunk.filtradorMalla.mesh = malla;
 
         chunk.colisionadorMalla.sharedMesh = malla;
-
-        
     }
 }
