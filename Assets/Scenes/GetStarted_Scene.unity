@@ -789,7 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76745d045e4d6040ba9dde693239bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
-  atlas: {fileID: 0}
+  atlas: {fileID: 4343727234628468602, guid: 34ca4bba2aff68843ba7fb2c7b34a2f4, type: 2}
   filtradorMalla: {fileID: 1175805963}
   colisionadorMalla: {fileID: 0}
   vertices: []

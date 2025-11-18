@@ -40,7 +40,7 @@ public class Chunk : MonoBehaviour
 
             if (sprites.Length > 0)
             {
-                GetComponent<MeshRenderer>().material.mainTexture = sprites[0].texture;
+                GetComponent<MeshRenderer>().sharedMaterial.mainTexture = sprites[0].texture;
             }
         }
 

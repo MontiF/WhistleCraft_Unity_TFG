@@ -5,28 +5,39 @@ using UnityEngine.U2D;
 
 public static class GeneradorMalla
 {
-    private static void AsignarUVs(Chunk chunk, TipoBloque tipo)
+    private static void AsignarUVs(Chunk chunk, TipoBloque tipo, string sufijo)
     {
-        // 1. Obtenemos el nombre del sprite basado en el Enum (Ej: TipoBloque.TIERRA -> "TIERRA")
-        // IMPORTANTE: Tus sprites en el Atlas deben llamarse igual que tus Enums (o usar un switch case)
-        string nombreSprite = tipo.ToString(); 
+        string nombreBase = tipo.ToString();          // Ej: "HIERBA"
+        string nombreConSufijo = nombreBase + sufijo; // Ej: "HIERBA_TOP"
+
+        Sprite s = null;
 
         if (chunk.atlas != null)
         {
-            Sprite s = chunk.atlas.GetSprite(nombreSprite);
-            if (s != null)
+            // 1. Intentamos buscar la versión específica (Ej: HIERBA_TOP)
+            s = chunk.atlas.GetSprite(nombreConSufijo);
+
+            // 2. Si no existe (es null), buscamos la versión normal (Ej: TIERRA)
+            // Esto sirve para bloques que son iguales por todos lados.
+            if (s == null)
             {
-                // s.uv devuelve un array de 4 Vector2 con la posición exacta en el atlas
-                chunk.uvs.AddRange(s.uv);
-                return;
+                s = chunk.atlas.GetSprite(nombreBase);
             }
         }
 
-        // Si algo falla (atlas nulo o sprite no encontrado), ponemos UVs vacías para evitar errores
-        chunk.uvs.Add(Vector2.zero);
-        chunk.uvs.Add(Vector2.zero);
-        chunk.uvs.Add(Vector2.zero);
-        chunk.uvs.Add(Vector2.zero);
+        if (s != null)
+        {
+            chunk.uvs.AddRange(s.uv);
+        }
+        else
+        {
+            // Si falla todo, coordenadas vacías para evitar errores
+            // Debug.LogWarning("Falta textura para: " + nombreConSufijo);
+            chunk.uvs.Add(Vector2.zero);
+            chunk.uvs.Add(Vector2.zero);
+            chunk.uvs.Add(Vector2.zero);
+            chunk.uvs.Add(Vector2.zero);
+        }
     }
     
     public static void GenerarCaraFrontal(Chunk chunk, Vector3 posicion, TipoBloque tipo)
@@ -46,7 +57,7 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice + 2);
 
-        AsignarUVs(chunk, tipo);
+        AsignarUVs(chunk, tipo, "_LADO");
     }
 
     public static void GenerarCaraTrasera(Chunk chunk, Vector3 posicion, TipoBloque tipo)
@@ -66,7 +77,7 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice);
 
-        AsignarUVs(chunk, tipo);
+        AsignarUVs(chunk, tipo, "_LADO");
     }
 
     public static void GenerarCaraIzquierda(Chunk chunk, Vector3 posicion, TipoBloque tipo)
@@ -91,7 +102,7 @@ public static class GeneradorMalla
     chunk.triangulos.Add(ultimoVertice + 3);
     chunk.triangulos.Add(ultimoVertice + 2);
 
-    AsignarUVs(chunk, tipo);
+    AsignarUVs(chunk, tipo, "_LADO");
 }
 
     public static void GenerarCaraDerecha(Chunk chunk, Vector3 posicion, TipoBloque tipo)
@@ -114,7 +125,7 @@ public static class GeneradorMalla
     chunk.triangulos.Add(ultimoVertice + 2);
     chunk.triangulos.Add(ultimoVertice + 3);
 
-    AsignarUVs(chunk, tipo);
+    AsignarUVs(chunk, tipo, "_LADO");
 }
 
     public static void GenerarCaraArriba(Chunk chunk, Vector3 posicion, TipoBloque tipo)
@@ -135,7 +146,7 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
 
-        AsignarUVs(chunk, tipo);
+        AsignarUVs(chunk, tipo, "_TOP");
 
     }
 
@@ -158,7 +169,7 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
 
-        AsignarUVs(chunk, tipo);
+        AsignarUVs(chunk, tipo, "");
 
     }
 
