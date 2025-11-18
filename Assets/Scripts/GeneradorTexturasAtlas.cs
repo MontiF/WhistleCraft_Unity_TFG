@@ -11,7 +11,7 @@ public class GeneradorTexturasAtlas
     public static void Generate(Mundo mundo){
         textureAtlas = new Texture2D(3 * tamanoTexura, mundo.DatosBloques.Count * tamanoTexura);
 
-        for (int i = 0; i < Mundo.main.DatosBloques.Count; i++)
+        for (int i = 0; i < mundo.DatosBloques.Count; i++)
         {
             AddTextura(mundo.DatosBloques[i].texturaLateral, 0, i);
             AddTextura(mundo.DatosBloques[i].texturaArriba, 1, i);

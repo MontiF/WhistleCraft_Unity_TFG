@@ -592,6 +592,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b561e984887efaf4c8cae1f4783d3449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mundo
+  DatosBloques:
+  - {fileID: 11400000, guid: 978dff4c4ebaf254eb5f4ef53490c15c, type: 2}
+  - {fileID: 11400000, guid: 41118b4b1a0b2f44ba4bb9084624e946, type: 2}
+  - {fileID: 11400000, guid: 6cfca3896087e784a9f4de57f9febc04, type: 2}
 --- !u!4 &1017636528
 Transform:
   m_ObjectHideFlags: 0
@@ -742,7 +746,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: faec9c705bd8d4f888f43c587891a445, type: 2}
+  - {fileID: 2100000, guid: f3386c391c111f0419750ba4a5694aa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -785,10 +789,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76745d045e4d6040ba9dde693239bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
+  atlas: {fileID: 0}
   filtradorMalla: {fileID: 1175805963}
   colisionadorMalla: {fileID: 0}
   vertices: []
   triangulos: 
+  uvs: []
 --- !u!64 &1175805965
 MeshCollider:
   m_ObjectHideFlags: 0

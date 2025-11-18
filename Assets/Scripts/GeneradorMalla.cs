@@ -1,10 +1,35 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.U2D;
 
 public static class GeneradorMalla
 {
-    public static void GenerarCaraFrontal(Chunk chunk, Vector3 posicion)
+    private static void AsignarUVs(Chunk chunk, TipoBloque tipo)
+    {
+        // 1. Obtenemos el nombre del sprite basado en el Enum (Ej: TipoBloque.TIERRA -> "TIERRA")
+        // IMPORTANTE: Tus sprites en el Atlas deben llamarse igual que tus Enums (o usar un switch case)
+        string nombreSprite = tipo.ToString(); 
+
+        if (chunk.atlas != null)
+        {
+            Sprite s = chunk.atlas.GetSprite(nombreSprite);
+            if (s != null)
+            {
+                // s.uv devuelve un array de 4 Vector2 con la posición exacta en el atlas
+                chunk.uvs.AddRange(s.uv);
+                return;
+            }
+        }
+
+        // Si algo falla (atlas nulo o sprite no encontrado), ponemos UVs vacías para evitar errores
+        chunk.uvs.Add(Vector2.zero);
+        chunk.uvs.Add(Vector2.zero);
+        chunk.uvs.Add(Vector2.zero);
+        chunk.uvs.Add(Vector2.zero);
+    }
+    
+    public static void GenerarCaraFrontal(Chunk chunk, Vector3 posicion, TipoBloque tipo)
     {
         int ultimoVertice = chunk.vertices.Count;
 
@@ -20,9 +45,11 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice);
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice + 2);
+
+        AsignarUVs(chunk, tipo);
     }
 
-    public static void GenerarCaraTrasera(Chunk chunk, Vector3 posicion)
+    public static void GenerarCaraTrasera(Chunk chunk, Vector3 posicion, TipoBloque tipo)
     {
         int ultimoVertice = chunk.vertices.Count;
 
@@ -38,9 +65,11 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 2);
         chunk.triangulos.Add(ultimoVertice + 3);
         chunk.triangulos.Add(ultimoVertice);
+
+        AsignarUVs(chunk, tipo);
     }
 
-    public static void GenerarCaraIzquierda(Chunk chunk, Vector3 posicion)
+    public static void GenerarCaraIzquierda(Chunk chunk, Vector3 posicion, TipoBloque tipo)
 {
     // Esta es la cara que mira hacia X = 0
     int ultimoVertice = chunk.vertices.Count;
@@ -61,9 +90,11 @@ public static class GeneradorMalla
     chunk.triangulos.Add(ultimoVertice + 0);
     chunk.triangulos.Add(ultimoVertice + 3);
     chunk.triangulos.Add(ultimoVertice + 2);
+
+    AsignarUVs(chunk, tipo);
 }
 
-    public static void GenerarCaraDerecha(Chunk chunk, Vector3 posicion)
+    public static void GenerarCaraDerecha(Chunk chunk, Vector3 posicion, TipoBloque tipo)
 {
     // Esta es la cara que mira hacia X = +1
     int ultimoVertice = chunk.vertices.Count;
@@ -82,9 +113,11 @@ public static class GeneradorMalla
     chunk.triangulos.Add(ultimoVertice + 0);
     chunk.triangulos.Add(ultimoVertice + 2);
     chunk.triangulos.Add(ultimoVertice + 3);
+
+    AsignarUVs(chunk, tipo);
 }
 
-    public static void GenerarCaraArriba(Chunk chunk, Vector3 posicion)
+    public static void GenerarCaraArriba(Chunk chunk, Vector3 posicion, TipoBloque tipo)
     {
         int ultimoVertice = chunk.vertices.Count;
         
@@ -102,10 +135,12 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
 
+        AsignarUVs(chunk, tipo);
+
     }
 
     // Genera la cara que mira hacia ABAJO (Y negativa)
-    public static void GenerarCaraAbajo(Chunk chunk, Vector3 posicion)
+    public static void GenerarCaraAbajo(Chunk chunk, Vector3 posicion, TipoBloque tipo)
     {
         int ultimoVertice = chunk.vertices.Count;
 
@@ -123,6 +158,8 @@ public static class GeneradorMalla
         chunk.triangulos.Add(ultimoVertice + 1);
         chunk.triangulos.Add(ultimoVertice + 2);
 
+        AsignarUVs(chunk, tipo);
+
     }
 
     public static void AplicarMallas(Chunk chunk)
@@ -134,10 +171,13 @@ public static class GeneradorMalla
         malla.vertices = chunk.vertices.ToArray();
         malla.triangles = chunk.triangulos.ToArray();
 
-        // 3.Recalcular las normales para que la luz funcione
+        // 3. Asignar las coordenadas UV
+        malla.uv = chunk.uvs.ToArray();
+        
+        // 4. Recalcular las normales para que la luz funcione
         malla.RecalculateNormals();
 
-        // 4. Asignar la malla completa al MeshFilter
+        // 5. Asignar la malla completa al MeshFilter
         chunk.filtradorMalla.mesh = malla;
 
         chunk.colisionadorMalla.sharedMesh = malla;
